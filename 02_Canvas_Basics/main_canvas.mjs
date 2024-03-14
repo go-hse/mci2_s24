@@ -11,19 +11,26 @@ window.onload = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    let x = 0, y = 0, sx = 3, sy = 3;
-    const q = 20;
+    let x = 0, y = 0, sx = 3, sy = 3, alpha = 0;
+    const qw = 2, qh = 4;
+    const radius = canvas.height / 4;
+
+    const minute = Math.PI / 30;
     function draw() {
+        context.resetTransform();
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.fillStyle = "#ff5a9e";
-        context.fillRect(x - 5, y - 5, q * 2, q * 2);
 
-        context.fillStyle = "#005a9e";
-        x += sx; if (x + q > canvas.width || x < 0) sx *= -1;
-        y += sy; if (y + q > canvas.height || y < 0) sy *= -1;
-        context.fillRect(x, y, q, q + 10);
+        context.translate(canvas.width / 2, canvas.height / 2);
 
-        lib.line(context, canvas.width / 2, canvas.height / 2, x, y, "red", 1);
+        for (let m = 0; m < 60; ++m) {
+            if (m % 5 === 0) {
+                lib.line(context, radius - 25, 0, radius, 0, "#000");
+            } else {
+                lib.line(context, radius - 10, 0, radius, 0, "#000");
+            }
+            context.rotate(minute);
+        }
 
         window.requestAnimationFrame(draw);
     }
