@@ -4,6 +4,8 @@ export function initCanvas(id) {
 
     // Context
     const context = canvas.getContext('2d');
+
+
     return { canvas, context };
 }
 

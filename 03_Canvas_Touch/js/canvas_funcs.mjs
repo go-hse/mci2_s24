@@ -24,6 +24,10 @@ export function line(ctx, x1, y1, x2, y2, strokeStyle = "#fff", lineWidth = 1) {
     ctx.stroke();
 }
 
+
+const startAngle = 0;
+const endAngle = Math.PI * 2;
+
 export function circle(ctx, x, y, radius, fillStyle = "#fff", strokeStyle = "#000", lineWidth = 1) {
     ctx.fillStyle = fillStyle;
     ctx.lineWidth = lineWidth;
