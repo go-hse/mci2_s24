@@ -30,9 +30,9 @@ export function createButton(context, x, y, options, callback) {
     // wird im Draw aufgerufen
     function draw() {
         if (inside)
-            circle(context, x, y, radius, "#f00");
+            circle(context, x, y, radius, "#aaa");
         else
-            circle(context, x, y, radius, "#ff0");
+            circle(context, x, y, radius, options.color);
     }
 
     // wird im Touch-Event aufgerufen
