@@ -4,6 +4,14 @@ export function initCanvas(id) {
 
     // Context
     const context = canvas.getContext('2d');
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
     return { canvas, context };
 }
 
@@ -15,3 +23,14 @@ export function line(ctx, x1, y1, x2, y2, strokeStyle = "#fff", lineWidth = 1) {
     ctx.lineTo(x2, y2);
     ctx.stroke();
 }
+
+export function circle(ctx, x, y, radius, fillStyle = "#fff", strokeStyle = "#000", lineWidth = 1) {
+    ctx.fillStyle = fillStyle;
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = strokeStyle;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, startAngle, endAngle, true);
+    ctx.fill();
+    ctx.stroke();
+}
+
