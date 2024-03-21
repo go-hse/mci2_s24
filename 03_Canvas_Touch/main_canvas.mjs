@@ -16,10 +16,15 @@ window.onload = () => {
         rmFingers(evt);
     });
 
+    const btn = lib.createButton(context, 50, 50, {}, () => {
+        console.log("touched");
+    });
+
     const fingers = {};
     function setFingers(evt, isStart = false) {
         evt.preventDefault();
         for (let t of evt.changedTouches) {
+            btn.isInside(t);
             fingers[t.identifier] = { x: t.pageX, y: t.pageY };
         }
     }
@@ -27,6 +32,7 @@ window.onload = () => {
     function rmFingers(evt) {
         evt.preventDefault();
         for (let t of evt.changedTouches) {
+            btn.reset(t);
             delete fingers[t.identifier];
         }
     }
@@ -35,6 +41,7 @@ window.onload = () => {
     function draw() {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
+        btn.draw();
         const ids = Object.keys(fingers);
         if (ids.length) {
             for (let id of ids) {
