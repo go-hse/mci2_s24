@@ -4,8 +4,12 @@ body {
 	font-family: Monospace;
 	font-size: 13px;
 	line-height: 24px;
-	overflow: hidden;
+
 	/* Hide scrollbars */
+	overflow: hidden;
+
+	/* No scrolling */
+	touch-action: none;
 }
 
 canvas {

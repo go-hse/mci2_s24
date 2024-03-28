@@ -9,7 +9,6 @@ window.onload = () => {
     });
 
     canvas.addEventListener("touchmove", (evt) => {
-        console.log("move", evt);
         setFingers(evt, false);
     });
 
@@ -19,19 +18,16 @@ window.onload = () => {
 
     let strokeStyle = "#000";
     const interactiveObjects = [];
+
     interactiveObjects.push(lib.createButton(context, 50, 50, { color: "#f00" }, () => {
-        console.log("touched red");
         strokeStyle = "#f00";
     }));
     interactiveObjects.push(lib.createButton(context, 150, 50, { color: "#0f0" }, () => {
-        console.log("touched green");
         strokeStyle = "#0f0";
     }));
     interactiveObjects.push(lib.createButton(context, 250, 50, { color: "#00f" }, () => {
-        console.log("touched blue");
         strokeStyle = "#00f";
     }));
-
 
     const fingers = {}, points = [];
     function setFingers(evt, isStart = false) {
@@ -52,7 +48,6 @@ window.onload = () => {
             delete fingers[t.identifier];
         }
     }
-
 
     function draw() {
         context.clearRect(0, 0, canvas.width, canvas.height);
