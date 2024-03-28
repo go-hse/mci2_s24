@@ -1,8 +1,11 @@
 import * as lib from "./js/canvas_funcs.mjs";
+import { createButton, createInteractivePath } from "./js/interactive_objects.mjs";
 
 window.onload = () => {
     // Aufruf: initialisier Canvas, id des HTM: "canvas"
     const { canvas, context } = lib.initCanvas("canvas");
+
+    const my_u = lib.u_path();
 
     canvas.addEventListener("touchstart", (evt) => {
         setFingers(evt, true);
@@ -19,15 +22,20 @@ window.onload = () => {
     let strokeStyle = "#000";
     const interactiveObjects = [];
 
-    interactiveObjects.push(lib.createButton(context, 50, 50, { color: "#f00" }, () => {
+    interactiveObjects.push(createButton(context, 50, 50, { color: "#f00" }, () => {
         strokeStyle = "#f00";
     }));
-    interactiveObjects.push(lib.createButton(context, 150, 50, { color: "#0f0" }, () => {
+    interactiveObjects.push(createButton(context, 150, 50, { color: "#0f0" }, () => {
         strokeStyle = "#0f0";
     }));
-    interactiveObjects.push(lib.createButton(context, 250, 50, { color: "#00f" }, () => {
+    interactiveObjects.push(createButton(context, 250, 50, { color: "#00f" }, () => {
         strokeStyle = "#00f";
     }));
+
+    interactiveObjects.push(createInteractivePath(context, my_u, 250, 250, 30, Math.PI / 5, { color: "#00f" }, () => {
+        strokeStyle = "#00f";
+    }));
+
 
     const fingers = {}, points = [];
     function setFingers(evt, isStart = false) {
@@ -50,6 +58,7 @@ window.onload = () => {
     }
 
     function draw() {
+        context.resetTransform();
         context.clearRect(0, 0, canvas.width, canvas.height);
         for (let io of interactiveObjects)
             io.draw();
@@ -75,7 +84,6 @@ window.onload = () => {
                 lib.circle(context, f.x, f.y, 20, "#f00");
             }
         }
-
         window.requestAnimationFrame(draw);
     }
     draw();

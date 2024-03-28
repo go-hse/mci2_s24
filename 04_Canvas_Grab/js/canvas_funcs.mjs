@@ -21,41 +21,6 @@ export function distance(x1, y1, x2, y2) {
     return Math.sqrt(dx * dx + dy * dy);
 }
 
-export function createButton(context, x, y, options, callback) {
-
-    const radius = 30;
-    let inside = false, identifier;
-
-
-    // wird im Draw aufgerufen
-    function draw() {
-        if (inside)
-            circle(context, x, y, radius, "#aaa");
-        else
-            circle(context, x, y, radius, options.color);
-    }
-
-    // wird im Touch-Event aufgerufen
-    function isInside(evt) {
-        const d = distance(x, y, evt.pageX, evt.pageY);
-        inside = d <= radius;
-        if (inside) {
-            identifier = evt.identifier;
-            callback();
-        }
-        return inside;
-    }
-
-    function reset(evt) {
-        if (evt.identifier === identifier) {
-            inside = false;
-            identifier = undefined;
-        }
-    }
-
-
-    return { draw, isInside, reset };
-}
 
 export function line(ctx, x1, y1, x2, y2, strokeStyle = "#fff", lineWidth = 1) {
     ctx.lineWidth = lineWidth;
@@ -80,3 +45,43 @@ export function circle(ctx, x, y, radius, fillStyle = "#fff", strokeStyle = "#00
     ctx.stroke();
 }
 
+export function u_path() {
+    let upath = new Path2D();
+    upath.moveTo(-2, -2);
+    upath.lineTo(-2, 2);
+    upath.lineTo(-1, 2);
+    upath.lineTo(-1, -1);
+    upath.lineTo(1, -1);
+    upath.lineTo(1, 2);
+    upath.lineTo(2, 2);
+    upath.lineTo(2, -2);
+    upath.closePath();
+    return upath;
+}
+
+export function fillPath(ctx, path, Matrix, fillStyle = "#fff", strokeStyle = "#000", lineWidth = 0.1) {
+    ctx.save();  // Speichern des Zustands mit der aktuellen Matrix auf Stack
+    ctx.setTransform(Matrix); // Setzen der Matrix
+    ctx.fillStyle = fillStyle;
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = strokeStyle;
+    ctx.fill(path);
+    ctx.stroke(path);
+    ctx.restore(); // Holen der gespeicherten Matrix vom Stack
+}
+
+
+export function setTransform(ctx, x, y, alpha = 0, sc = 1) {
+    ctx.resetTransform(); // Zurücksetzen auf Identität
+    ctx.translate(x, y); // Translation
+    ctx.rotate(alpha); // Rotation
+    ctx.scale(sc, sc); // Skalierung
+}
+
+export function getTransform(ctx, x, y, alpha = 0, sc = 1) {
+    ctx.save();  // Speichern des Zustands mit der aktuellen Matrix auf Stack
+    setTransform(ctx, x, y, alpha, sc);
+    let L = ctx.getTransform(); // Berechnete Matrix speichern
+    ctx.restore(); // Holen der gespeicherten Matrix vom Stack
+    return L; // Rückgabe
+}
