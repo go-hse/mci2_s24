@@ -31,11 +31,11 @@ export function createButton(context, x, y, options, callback) {
     }
 
 
-    return { draw, isInside, reset };
+    return { draw, isInside, reset, move: () => { } };
 }
 
 export function createInteractivePath(context, path, x, y, sc, alpha, options, callback) {
-    let inside = false, identifier;
+    let inside = false, identifier, Pre;
 
     let M = lib.getTransform(context, x, y, alpha, sc); // lokale Koord.Sys. der interakt. Obj.
 
@@ -54,8 +54,15 @@ export function createInteractivePath(context, path, x, y, sc, alpha, options, c
         inside = context.isPointInPath(path, Ti.x, Ti.y);
         if (inside) {
             identifier = evt.identifier;
+            Pre = (new DOMMatrix([1, 0, 0, 1, -evt.pageX, -evt.pageY])).multiplySelf(M);
         }
         return inside;
+    }
+
+    function move(evt) {
+        if (evt.identifier === identifier) {
+            M = (new DOMMatrix([1, 0, 0, 1, evt.pageX, evt.pageY])).multiplySelf(Pre);
+        }
     }
 
     function reset(evt) {
@@ -66,5 +73,5 @@ export function createInteractivePath(context, path, x, y, sc, alpha, options, c
     }
 
 
-    return { draw, isInside, reset };
+    return { draw, isInside, reset, move };
 }

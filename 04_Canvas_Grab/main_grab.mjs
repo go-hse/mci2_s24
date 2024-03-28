@@ -41,8 +41,12 @@ window.onload = () => {
     function setFingers(evt, isStart = false) {
         evt.preventDefault();
         for (let t of evt.changedTouches) {
-            for (let io of interactiveObjects)
-                io.isInside(t);
+            if (isStart)
+                for (let io of interactiveObjects)
+                    io.isInside(t);
+            else
+                for (let io of interactiveObjects)
+                    io.move(t);
             fingers[t.identifier] = { x: t.pageX, y: t.pageY };
             points.push({ x: t.pageX, y: t.pageY, strokeStyle, isStart })
         }
