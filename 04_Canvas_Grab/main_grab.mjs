@@ -1,5 +1,5 @@
 import * as lib from "./js/canvas_funcs.mjs";
-import { createButton, createInteractivePath } from "./js/interactive_objects.mjs";
+import { createButton, createInteractivePath, createInteractivePath2Finger } from "./js/interactive_objects.mjs";
 
 window.onload = () => {
     // Aufruf: initialisier Canvas, id des HTM: "canvas"
@@ -32,7 +32,7 @@ window.onload = () => {
         strokeStyle = "#00f";
     }));
 
-    interactiveObjects.push(createInteractivePath(context, my_u, 250, 250, 30, Math.PI / 5, { color: "#00f" }, () => {
+    interactiveObjects.push(createInteractivePath2Finger(context, my_u, 250, 250, 30, Math.PI / 5, { color: "#00f" }, () => {
         strokeStyle = "#00f";
     }));
 
@@ -67,19 +67,19 @@ window.onload = () => {
         for (let io of interactiveObjects)
             io.draw();
 
-        context.lineWidth = 5;
-        context.beginPath();
-        for (let p of points) {
-            if (p.isStart) {
-                context.stroke();
-                context.strokeStyle = p.strokeStyle;
-                context.beginPath();
-                context.moveTo(p.x, p.y);
-            } else {
-                context.lineTo(p.x, p.y);
-            }
-        }
-        context.stroke();
+        // context.lineWidth = 5;
+        // context.beginPath();
+        // for (let p of points) {
+        //     if (p.isStart) {
+        //         context.stroke();
+        //         context.strokeStyle = p.strokeStyle;
+        //         context.beginPath();
+        //         context.moveTo(p.x, p.y);
+        //     } else {
+        //         context.lineTo(p.x, p.y);
+        //     }
+        // }
+        // context.stroke();
 
         const ids = Object.keys(fingers);
         if (ids.length) {
