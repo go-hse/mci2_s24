@@ -1,4 +1,5 @@
 import * as THREE from '../99_Lib/three.module.min.js';
+import { add } from './js/geometry.mjs';
 
 console.log("ThreeJs " + THREE.REVISION);
 
@@ -22,14 +23,21 @@ window.onload = function () {
         metalness: 0.0,
     }));
     scene.add(box);
+    box.position.z = -0.7;
 
-    const boxGreen = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.1), new THREE.MeshStandardMaterial({
-        color: 0x33ff33,
-        roughness: 0.7,
-        metalness: 0.0,
-    }));
-    scene.add(boxGreen);
-    boxGreen.position.z = 2;
+    const arr = [];
+    let count = 0;
+
+    const delta = 0.3, z = -1;
+    for (let x = -1; x <= 1; x += delta) {
+        for (let y = -1; y <= 1; y += delta) {
+            if (++count % 2 == 0)
+                arr.push(add(6, scene, x, y, z));
+            else
+                arr.push(add(4, scene, x, y, z));
+        }
+
+    }
 
     // Renderer erstellen
     const renderer = new THREE.WebGLRenderer({
@@ -45,6 +53,12 @@ window.onload = function () {
     function render() {
         box.rotation.x += 0.01;
         box.rotation.y += 0.01;
+
+        for (const o of arr) {
+            o.rotation.x -= 0.01;
+            o.rotation.y -= 0.01;
+        }
+
         renderer.render(scene, camera);
     }
     renderer.setAnimationLoop(render);

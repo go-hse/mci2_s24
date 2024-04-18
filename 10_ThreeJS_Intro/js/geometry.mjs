@@ -6,14 +6,15 @@ const geometries = [
     new THREE.CylinderGeometry(0.2, 0.2, 0.2, 64),
     new THREE.IcosahedronGeometry(0.2, 3),
     new THREE.TorusKnotGeometry(.2, .03, 50, 16),
-    new THREE.TorusGeometry(0.2, 0.04, 64, 32)
+    new THREE.TorusGeometry(0.2, 0.04, 64, 32),
+    new THREE.CapsuleGeometry(0.1, 0.3, 8, 16)
 ];
 
 function randomMaterial() {
     return new THREE.MeshStandardMaterial({
         color: Math.random() * 0xff3333,
-        roughness: 0.7,
-        metalness: 0.0
+        roughness: 0.2,
+        metalness: 0.4
     });
 }
 
