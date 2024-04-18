@@ -1,5 +1,6 @@
 import * as THREE from '../99_Lib/three.module.min.js';
 import { add } from './js/geometry.mjs';
+import { keyboard, mouse } from './js/interaction2D.mjs';
 
 console.log("ThreeJs " + THREE.REVISION);
 
@@ -24,6 +25,23 @@ window.onload = function () {
     }));
     scene.add(box);
     box.position.z = -0.7;
+
+    // Tasten-Simulation mit Callbacks
+    const addKey = keyboard();
+    addKey(" ", active => {
+        console.log("Space", active);
+    });
+
+    addKey("Escape", active => {
+        console.log("Escape", active);
+    });
+
+    // Cursor-Geometry bzw. Mesh
+    const cursor = add(1, scene);
+    cursor.position.z = -0.5;
+
+    // Cursor mit 2D-Maus steuern
+    mouse(cursor);
 
     const arr = [];
     let count = 0;
