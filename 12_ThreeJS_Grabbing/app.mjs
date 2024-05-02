@@ -1,6 +1,7 @@
 import * as THREE from '../99_Lib/three.module.min.js';
-import { add } from './js/geometry.mjs';
+import { add, createLine } from './js/geometry.mjs';
 import { keyboard, mouse } from './js/interaction2D.mjs';
+import { createRay } from './js/ray.mjs';
 
 console.log("ThreeJs " + THREE.REVISION);
 
@@ -54,13 +55,27 @@ window.onload = function () {
             else
                 arr.push(add(4, scene, x, y, z));
         }
-
     }
+
+    for (let i = 0; i < arr.length; ++i) {
+        arr[i].name = `o_${i}`;
+    }
+
+    const lineFunc = createLine(scene);
+
+    let position = new THREE.Vector3();
+    let rotation = new THREE.Quaternion();
+    let scale = new THREE.Vector3();
+    let direction = new THREE.Vector3();
+    let endRay = new THREE.Vector3();
 
     // Renderer erstellen
     const renderer = new THREE.WebGLRenderer({
         antialias: true,
     });
+
+    const rayFunc = createRay(arr);
+
 
     // Renderer-Parameter setzen
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -69,13 +84,20 @@ window.onload = function () {
 
     // Renderer-Loop starten
     function render() {
-        box.rotation.x += 0.01;
-        box.rotation.y += 0.01;
+        cursor.matrix.decompose(position, rotation, scale);
+        direction.set(0, 1, 0);
+        direction.applyQuaternion(rotation);
 
-        for (const o of arr) {
-            o.rotation.x -= 0.01;
-            o.rotation.y -= 0.01;
+        lineFunc(1, position);
+
+        const intersectObject = rayFunc(position, direction);
+        if (intersectObject) {
+            // console.log(intersectObject.object.name);
+            endRay.addVectors(position, direction.multiplyScalar(intersectObject.distance));
+        } else {
+            endRay.addVectors(position, direction.multiplyScalar(10));
         }
+        lineFunc(0, endRay);
 
         renderer.render(scene, camera);
     }

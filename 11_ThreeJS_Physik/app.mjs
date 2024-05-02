@@ -93,7 +93,7 @@ window.onload = async function () {
     const cursor_scale = new THREE.Vector3();
     const direction = new THREE.Vector3();
     const velocity = new THREE.Vector3();
-    const MOVESPEED = 5;
+    const MOVESPEED = 15;
 
     let ballIdx = 0;
     function shootBall() {

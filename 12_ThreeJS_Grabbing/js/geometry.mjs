@@ -24,3 +24,25 @@ export function add(i, parent, x = 0, y = 0, z = 0) {
     parent.add(object);
     return object;
 }
+
+
+export function createLine(scene) {
+    const material = new THREE.LineBasicMaterial({ color: 0xffffff });
+    const points = [];
+    points.push(new THREE.Vector3(0, 0, 0));
+    points.push(new THREE.Vector3(0, 1, 0));
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+    const line = new THREE.Line(geometry, material);
+    scene.add(line);
+
+    const position = line.geometry.attributes.position.array;
+
+    return (idx, pos) => {
+        idx *= 3;
+        position[idx++] = pos.x;
+        position[idx++] = pos.y;
+        position[idx++] = pos.z;
+        line.geometry.attributes.position.needsUpdate = true;
+    }
+}
