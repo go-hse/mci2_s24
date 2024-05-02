@@ -4,7 +4,7 @@ const geometries = [
     new THREE.BoxGeometry(0.25, 0.25, 0.25),
     new THREE.ConeGeometry(0.1, 0.4, 64),
     new THREE.CylinderGeometry(0.2, 0.2, 0.2, 64),
-    new THREE.IcosahedronGeometry(0.2, 3),
+    new THREE.IcosahedronGeometry(0.1, 3),
     new THREE.TorusKnotGeometry(.2, .03, 50, 16),
     new THREE.TorusGeometry(0.2, 0.04, 64, 32),
     new THREE.CapsuleGeometry(0.1, 0.3, 8, 16)

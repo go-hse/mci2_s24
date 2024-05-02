@@ -13,7 +13,7 @@ export function keyboard() {
                 KeyObject.callback(active);
             }
         } else {
-            console.log(`unbekannt <${ev.key}>`);
+            console.log(`Unbekannter Key <${ev.key}>`);
         }
     }
 
@@ -35,7 +35,7 @@ export function mouse(cursor) {
     const mouseButtons = [false, false, false, false];
     function toggle(ev, active) {
         mouseButtons[ev.which] = active;
-        console.log(mouseButtons);
+        // console.log(mouseButtons);
     }
 
     function onMouseMove(ev) {
