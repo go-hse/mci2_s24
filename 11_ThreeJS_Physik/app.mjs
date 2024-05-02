@@ -44,18 +44,24 @@ window.onload = async function () {
 
     //////////////////////////////////////////////////////////////////////////////
     // Box
-    const boxWidth = 0.1;
-    const box = new THREE.Mesh(new THREE.BoxGeometry(boxWidth, boxWidth, boxWidth), new THREE.MeshStandardMaterial({
-        color: 0xff3333,
-        roughness: 0.7,
-        metalness: 0.0,
-    }));
-    box.name = "box";
-    box.position.y = boxWidth / 2;
-    box.castShadow = true;
-    box.receiveShadow = true;
-    box.userData.physics = { mass: 1 };
-    scene.add(box);
+    const boxWidth = 0.2;
+
+    for (let i = 0; i < 10; ++i) {
+        const box = new THREE.Mesh(new THREE.BoxGeometry(boxWidth, boxWidth, boxWidth), new THREE.MeshStandardMaterial({
+            color: 0xff3333,
+            roughness: 0.7,
+            metalness: 0.0,
+        }));
+        box.name = `box_${i}`;
+        box.position.x = 2 * Math.random() - 1;
+        box.position.z = -1 * Math.random();
+        box.position.y = boxWidth / 2;
+
+        box.castShadow = true;
+        box.receiveShadow = true;
+        box.userData.physics = { mass: 1 };
+        scene.add(box);
+    }
 
     //////////////////////////////////////////////////////////////////////////////
     // Spheres
@@ -101,7 +107,6 @@ window.onload = async function () {
         if (++ballIdx >= MAX_SPHERES) ballIdx = 0;
         physics.setMeshPositionVelocity(spheres[ballIdx], cursor_position, velocity);
     }
-
 
     physics.addScene(scene);
     //
