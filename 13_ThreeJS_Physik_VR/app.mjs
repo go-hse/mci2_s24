@@ -1,8 +1,8 @@
 import * as THREE from '../99_Lib/three.module.min.js';
 import { AmmoPhysics } from '../99_Lib/jsm/physics/AmmoPhysics.js';
-import { VRButton } from '../99_Lib/jsm/webxr/VRButton.js';
-import { createVRcontrollers } from '../13_ThreeJS_Physik_VR/js/vr.mjs';
 
+import { VRButton } from '../99_Lib/jsm/webxr/VRButton.js';
+import { createVRcontrollers } from './js/vr.mjs';
 
 import { keyboard, mouse } from './js/interaction2D.mjs';
 import { add } from './js/geometry.mjs';
@@ -103,9 +103,7 @@ window.onload = async function () {
     let ballIdx = 0;
     function shootBall() {
         triggered = false;
-        cursor.updateMatrix();
         cursor.matrix.decompose(cursor_position, cursor_rotation, cursor_scale);
-        direction.set(0, 1, 0);
         direction.applyQuaternion(cursor_rotation);
 
         velocity.set(direction.x * MOVESPEED, direction.y * MOVESPEED, direction.z * MOVESPEED);
@@ -120,17 +118,37 @@ window.onload = async function () {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
-
     document.body.appendChild(renderer.domElement);
     document.body.appendChild(VRButton.createButton(renderer));
 
-
-
     //
+    let last_active_controller;
+    createVRcontrollers(scene, renderer, (controller, data, id) => {
+        cursor.matrixAutoUpdate = false;
+        cursor.visible = false;
+        last_active_controller = controller;
+        renderer.xr.enabled = true;
+        console.log("verbinde", id, data.handedness)
+    });
 
 
     // Renderer-Loop starten
+
+    let squeeze = false;
     function render() {
+
+        if (last_active_controller) {
+            cursor.matrix.copy(last_active_controller.matrix);
+            const nsqueeze = last_active_controller.userData.isSqueezeing;
+            if (nsqueeze !== squeeze) {
+                squeeze = nsqueeze;
+                if (squeeze) triggered = true;
+            }
+            direction.set(0, 0, -1);
+        } else {
+            direction.set(0, 1, 0);
+        }
+
         if (triggered) {
             shootBall();
         }

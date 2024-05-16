@@ -21,10 +21,13 @@ function randomMaterial() {
 export function add(i, parent, x = 0, y = 0, z = 0) {
     let object = new THREE.Mesh(geometries[i], randomMaterial());
     object.position.set(x, y, z);
+    object.updateMatrix();
+    object.castShadow = true;
+    object.name = `o_${i}`;
+    object.matrixAutoUpdate = false;
     parent.add(object);
     return object;
 }
-
 
 export function createLine(scene) {
     const material = new THREE.LineBasicMaterial({ color: 0xffffff });

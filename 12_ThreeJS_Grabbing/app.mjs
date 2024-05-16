@@ -27,16 +27,6 @@ window.onload = function () {
     scene.add(box);
     box.position.z = -0.7;
 
-    // Tasten-Simulation mit Callbacks
-    const addKey = keyboard();
-    addKey(" ", active => {
-        console.log("Space", active);
-    });
-
-    addKey("Escape", active => {
-        console.log("Escape", active);
-    });
-
     // Cursor-Geometry bzw. Mesh
     const cursor = add(1, scene);
     cursor.position.z = -0.5;
@@ -74,13 +64,24 @@ window.onload = function () {
         antialias: true,
     });
 
-    const rayFunc = createRay(arr);
+    const addKey = keyboard();
+    const maxDistance = 10;
 
+    let grabbed = false;
+    addKey(" ", active => {
+        console.log("Space: Grabbed", active);
+        grabbed = active;
+    });
+
+    const rayFunc = createRay(arr);
 
     // Renderer-Parameter setzen
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
+
+
+    let grabbedObject, initialGrabbed, distance;
 
     // Renderer-Loop starten
     function render() {
@@ -94,9 +95,27 @@ window.onload = function () {
         if (intersectObject) {
             // console.log(intersectObject.object.name);
             endRay.addVectors(position, direction.multiplyScalar(intersectObject.distance));
+            distance = intersectObject.distance;
         } else {
-            endRay.addVectors(position, direction.multiplyScalar(10));
+            endRay.addVectors(position, direction.multiplyScalar(maxDistance));
+            distance = maxDistance;
         }
+
+
+        if (grabbed) {
+            if (grabbedObject) {
+                endRay.addVectors(position, direction.multiplyScalar(distance));
+                lineFunc(1, endRay);
+                grabbedObject.matrix.copy(cursor.matrix.clone().multiply(initialGrabbed));
+            } else if (intersectObject) {
+                grabbedObject = intersectObject.object;
+                initialGrabbed = cursor.matrix.clone().invert().multiply(grabbedObject.matrix);
+            }
+        } else {
+            grabbedObject = undefined;
+        }
+
+
         lineFunc(0, endRay);
 
         renderer.render(scene, camera);
