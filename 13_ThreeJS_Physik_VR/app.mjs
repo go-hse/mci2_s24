@@ -80,6 +80,15 @@ window.onload = async function () {
         sphere.name = `sphere_${i}`;
         spheres.push(sphere);
     }
+    const pBoxes = [];
+    for (let i = 0; i < MAX_SPHERES; ++i) {
+        const obj = add(0, scene, 0, -1, 0);
+        obj.castShadow = true;
+        // obj.receiveShadow = true;
+        obj.userData.physics = { mass: 1.5 };
+        obj.name = `obj_${i}`;
+        pBoxes.push(obj);
+    }
 
     const cursor = add(1, scene);
     cursor.castShadow = true;
@@ -87,10 +96,14 @@ window.onload = async function () {
 
 
     const addKey = keyboard();
-    let triggered = false;
+    let triggered = false, triggeredBox = false;
     addKey(" ", active => {
         triggered = active;
     });
+    addKey("a", active => {
+        triggeredBox = active;
+    });
+
 
 
     const cursor_position = new THREE.Vector3();
@@ -100,15 +113,23 @@ window.onload = async function () {
     const velocity = new THREE.Vector3();
     const MOVESPEED = 15;
 
-    let ballIdx = 0;
-    function shootBall() {
+    let ballIdx = 0, boxIdx = 0;
+    function shootBall(box = false) {
         triggered = false;
+        triggeredBox = false;
         cursor.matrix.decompose(cursor_position, cursor_rotation, cursor_scale);
         direction.applyQuaternion(cursor_rotation);
 
         velocity.set(direction.x * MOVESPEED, direction.y * MOVESPEED, direction.z * MOVESPEED);
-        if (++ballIdx >= MAX_SPHERES) ballIdx = 0;
-        physics.setMeshPositionVelocity(spheres[ballIdx], cursor_position, velocity);
+        if (box) {
+            if (++boxIdx >= MAX_SPHERES) boxIdx = 0;
+            physics.setMeshPositionVelocity(pBoxes[boxIdx], cursor_position, velocity);
+        } else {
+            if (++ballIdx >= MAX_SPHERES) ballIdx = 0;
+            physics.setMeshPositionVelocity(spheres[ballIdx], cursor_position, velocity);
+        }
+
+
     }
 
     physics.addScene(scene);
@@ -151,6 +172,9 @@ window.onload = async function () {
 
         if (triggered) {
             shootBall();
+        }
+        if (triggeredBox) {
+            shootBall(true);
         }
         renderer.render(scene, camera);
     }
